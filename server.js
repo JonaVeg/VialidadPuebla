@@ -3,11 +3,10 @@ const path = require('path');
 const app = express();
 
 // Servir archivos estáticos desde la carpeta dist
-app.use(express.static(__dirname + '/dist/VialidadPuebla1'));
-
+app.use(express.static(__dirname + '/dist/vialidad-puebla1'));
 // Redirige todas las solicitudes al archivo index.html
 app.get('/*', function(req, res) {
-  res.sendFile(path.join(__dirname + '/dist/VialidadPuebla1/index.html'));
+  res.sendFile(path.join(__dirname + '/dist/vialidad-puebla1/index.html'));
 });
 
 // Inicia el servidor en el puerto especificado por Railway o en el puerto 8080 por defecto
