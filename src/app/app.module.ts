@@ -12,12 +12,14 @@ import { AngularFireStorageModule } from '@angular/fire/compat/storage';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { environment } from '../environments/environment';
 import { NavbarComponent } from './components/navbar/navbar.component';
+import { ReportarIncidenteComponent } from './components/reportar-incidente/reportar-incidente.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ReporteSubidaComponent,
-    NavbarComponent
+    NavbarComponent,
+    ReportarIncidenteComponent
   ],
   imports: [
     BrowserModule,

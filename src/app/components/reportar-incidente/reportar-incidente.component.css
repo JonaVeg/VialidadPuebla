@@ -1,0 +1,16 @@
+.preview-container {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  
+  .preview-item {
+    max-width: 100px;
+  }
+  
+  .img-thumbnail {
+    width: 100px;
+    height: auto;
+    border-radius: 5px;
+  }
+  
