@@ -1,35 +1,52 @@
-<div class="container mt-4">
-    <h2 class="text-center">📢 Reportar Incidente</h2>
-    <p class="text-center text-muted">Ayuda a mejorar la movilidad reportando infracciones viales.</p>
-  
-    <div class="card p-4 shadow">
-      <form (submit)="subirReporte()">
-        <!-- Selección de archivos -->
-        <div class="mb-3">
-          <label for="fileInput" class="form-label fw-bold">📷 Selecciona una imagen o video:</label>
-          <input type="file" id="fileInput" class="form-control" (change)="onFileSelected($event)" accept="image/*,video/*" multiple>
-        </div>
-  
-        <!-- Vista previa de archivos -->
-        <div class="preview-container mb-3">
-          <div *ngFor="let url of previewUrls" class="preview-item">
-            <img *ngIf="isImage(url)" [src]="url" class="img-thumbnail" alt="Vista previa">
-            <video *ngIf="isVideo(url)" [src]="url" controls class="img-thumbnail"></video>
-          </div>
-        </div>
-  
-        <!-- Descripción del incidente -->
-        <div class="mb-3">
-          <label class="form-label fw-bold">✍️ Descripción del incidente:</label>
-          <textarea class="form-control" rows="3" [(ngModel)]="descripcion" required></textarea>
-        </div>
-  
-        <!-- Botón de envío -->
-        <button type="submit" class="btn btn-primary w-100" [disabled]="!selectedFiles.length || isUploading">
-            {{ isUploading ? "⏳ Subiendo..." : "📤 Subir Reporte" }}
-          </button>
+<div class="container mt-5">
+  <div class="card shadow-lg p-4">
+      <h2 class="text-center mb-4">📢 Reportar Incidente</h2>
+      <p class="text-center text-muted">Ayuda a mejorar la movilidad reportando infracciones viales.</p>
+
+      <form (ngSubmit)="subirReporte()" class="needs-validation" novalidate>
           
+          <!-- 📌 Tipo de Incidente -->
+          <div class="mb-3">
+              <label for="tipoIncidente" class="form-label fw-bold">🚦 Tipo de Incidente</label>
+              <select id="tipoIncidente" [(ngModel)]="tipoIncidente" name="tipoIncidente" required class="form-select">
+                  <option value="" disabled selected>Seleccione un tipo</option>
+                  <option *ngFor="let tipo of tiposIncidentes" [value]="tipo">{{ tipo }}</option>
+              </select>
+          </div>
+
+          <!-- 📌 Subir Archivos -->
+          <div class="mb-3">
+              <label for="fileInput" class="form-label fw-bold">📸 Selecciona una imagen o video</label>
+              <input type="file" id="fileInput" (change)="onFileSelected($event)" multiple accept="image/*,video/*" class="form-control">
+          </div>
+
+          <!-- 📌 Previsualización de Archivos -->
+          <div class="mb-3 row" *ngIf="previewUrls.length > 0">
+              <div class="col-md-4 mb-2" *ngFor="let preview of previewUrls">
+                  <img *ngIf="isImage(preview)" [src]="preview" class="img-fluid rounded shadow">
+                  <video *ngIf="isVideo(preview)" [src]="preview" controls class="img-fluid rounded shadow"></video>
+              </div>
+          </div>
+
+          <!-- 📌 Descripción -->
+          <div class="mb-3">
+              <label for="descripcion" class="form-label fw-bold">✍️ Descripción del incidente</label>
+              <textarea id="descripcion" [(ngModel)]="descripcion" name="descripcion" required class="form-control" rows="3"></textarea>
+          </div>
+
+          <!-- 📌 Ubicación -->
+          <div class="mb-3">
+              <label for="ubicacion" class="form-label fw-bold">📍 Ubicación del incidente</label>
+              <input type="text" id="ubicacion" [(ngModel)]="ubicacion" name="ubicacion" placeholder="Ejemplo: Calle 5 de Mayo #10, Puebla" required class="form-control">
+          </div>
+
+          <!-- 📌 Botón de Enviar -->
+          <div class="d-grid">
+              <button type="submit" [disabled]="isUploading" class="btn btn-primary">
+                  {{ isUploading ? 'Enviando...' : '🚀 Subir Reporte' }}
+              </button>
+          </div>
+
       </form>
-    </div>
   </div>
-  
+</div>

@@ -9,14 +9,25 @@ import { finalize } from 'rxjs/operators';
   styleUrls: ['./reportar-incidente.component.css']
 })
 export class ReportarIncidenteComponent {
+  tiposIncidentes: string[] = [
+    "Estacionamiento indebido",
+    "Franeleros y cobros indebidos",
+    "Obstrucción de banquetas",
+    "Infracciones viales",
+    "Señalización defectuosa",
+    "Otros problemas viales"
+  ];
+
   selectedFiles: File[] = [];
   previewUrls: string[] = [];
   descripcion: string = '';
-  isUploading: boolean = false; // Para deshabilitar el botón mientras sube
+  ubicacion: string = '';
+  tipoIncidente: string = '';
+  isUploading: boolean = false;
 
   constructor(private storage: AngularFireStorage, private firestore: AngularFirestore) {}
 
-  // 📌 Maneja la selección de archivos
+  // 📌 Manejar selección de archivos y previsualización
   onFileSelected(event: any) {
     this.selectedFiles = Array.from(event.target.files);
     this.previewUrls = [];
@@ -28,25 +39,22 @@ export class ReportarIncidenteComponent {
     });
   }
 
-  // 📌 Verifica si el archivo es una imagen
+  // 📌 Verifica si es imagen o video
   isImage(fileUrl: string): boolean {
     return fileUrl.startsWith('data:image');
   }
-
-  // 📌 Verifica si el archivo es un video
   isVideo(fileUrl: string): boolean {
     return fileUrl.startsWith('data:video');
   }
 
-  // 📌 Subir el reporte a Firebase Storage y guardarlo en Firestore
+  // 📌 Subir reporte a Firestore con Firebase Storage
   subirReporte() {
-    if (this.selectedFiles.length === 0 || !this.descripcion.trim()) {
-      alert('❗ Debes seleccionar al menos un archivo y escribir una descripción.');
+    if (!this.tipoIncidente || this.selectedFiles.length === 0 || !this.descripcion.trim() || !this.ubicacion.trim()) {
+      alert('❗ Debes completar todos los campos antes de enviar el reporte.');
       return;
     }
 
-    this.isUploading = true; // Deshabilita el botón mientras se sube
-
+    this.isUploading = true;
     const uploadPromises = this.selectedFiles.map(file => {
       const filePath = `reportes/${Date.now()}_${file.name}`;
       const fileRef = this.storage.ref(filePath);
@@ -63,17 +71,16 @@ export class ReportarIncidenteComponent {
 
     Promise.all(uploadPromises).then(fileUrls => {
       const reporte = {
+        tipoIncidente: this.tipoIncidente,
         descripcion: this.descripcion,
+        ubicacion: this.ubicacion,
         archivos: fileUrls,
         fecha: new Date()
       };
 
       this.firestore.collection('reportes').add(reporte).then(() => {
         alert('✅ Reporte enviado con éxito.');
-        this.selectedFiles = [];
-        this.previewUrls = [];
-        this.descripcion = '';
-        this.isUploading = false; // Reactivar botón
+        this.resetForm();
       }).catch(error => {
         console.error("❌ Error al guardar en Firestore:", error);
         alert('❌ Error al guardar el reporte.');
@@ -85,5 +92,15 @@ export class ReportarIncidenteComponent {
       alert('❌ Error al subir el reporte.');
       this.isUploading = false;
     });
+  }
+
+  // 📌 Resetear formulario después de enviar
+  resetForm() {
+    this.selectedFiles = [];
+    this.previewUrls = [];
+    this.descripcion = '';
+    this.ubicacion = '';
+    this.tipoIncidente = '';
+    this.isUploading = false;
   }
 }

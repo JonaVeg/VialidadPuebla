@@ -1,17 +1,15 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-// Importar los componentes que se usarán en las rutas
-import { ReporteSubidaComponent } from './components/reporte-subida/reporte-subida.component';
-import { NavbarComponent } from './components/navbar/navbar.component';
+// Importar los componentes
+import { HomeComponent } from './components/home/home.component';
 import { ReportarIncidenteComponent } from './components/reportar-incidente/reportar-incidente.component';
-
+import { VerReportesComponent } from './components/ver-reportes/ver-reportes.component'; // Importación del nuevo componente
 
 const routes: Routes = [
-  { path: '', component: ReporteSubidaComponent }, // Página principal
-  //{ path: 'reportar', component: ReporteSubidaComponent }, // Página para reportar incidentes
-  { path: 'reportes', component: ReporteSubidaComponent }, // Sección donde se mostrarán reportes (ajústalo después)
-  { path: 'reportar', component: ReportarIncidenteComponent },
+  { path: '', component: HomeComponent }, // Página principal
+  { path: 'reportar-incidente', component: ReportarIncidenteComponent }, // Página para reportar
+  { path: 'ver-reportes', component: VerReportesComponent }, // Nueva página para ver reportes
 ];
 
 @NgModule({

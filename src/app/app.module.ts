@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { ReporteSubidaComponent } from './components/reporte-subida/reporte-subida.component';
 import { FormsModule } from '@angular/forms'; // Para usar ngModel
 
 
@@ -13,13 +12,17 @@ import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { environment } from '../environments/environment';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { ReportarIncidenteComponent } from './components/reportar-incidente/reportar-incidente.component';
+import { HomeComponent } from './components/home/home.component';
+import { VerReportesComponent } from './components/ver-reportes/ver-reportes.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    ReporteSubidaComponent,
+    
     NavbarComponent,
-    ReportarIncidenteComponent
+    ReportarIncidenteComponent,
+    HomeComponent,
+    VerReportesComponent
   ],
   imports: [
     BrowserModule,
