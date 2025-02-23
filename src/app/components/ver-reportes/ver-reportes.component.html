@@ -1,19 +1,24 @@
-<div class="reportes-container">
-    <h1>📊 Reportes de Incidentes</h1>
-    <p>Aquí se mostrarán los reportes enviados por los ciudadanos.</p>
-  
-    <div class="reporte">
-      <h3>🚗 Estacionamiento indebido</h3>
-      <p><strong>Ubicación:</strong> Calle 5 de Mayo, Puebla</p>
-      <p><strong>Fecha:</strong> 18 de febrero de 2025</p>
-      <img src="https://via.placeholder.com/300" alt="Imagen del incidente">
-    </div>
-  
-    <div class="reporte">
-      <h3>🚦 Semáforo descompuesto</h3>
-      <p><strong>Ubicación:</strong> Av. Juárez, Puebla</p>
-      <p><strong>Fecha:</strong> 17 de febrero de 2025</p>
-      <img src="https://via.placeholder.com/300" alt="Imagen del incidente">
+<div class="container mt-5">
+  <h2 class="text-center">📋 Reportes de Incidentes</h2>
+  <p class="text-center text-muted">Visualiza los reportes enviados en tiempo real</p>
+
+  <div class="row">
+    <div *ngFor="let reporte of reportes" class="col-md-6 mb-4">
+      <div class="card shadow-lg">
+        <div class="card-body">
+          <h5 class="card-title">🚦 {{ reporte.tipoIncidente }}</h5>
+          <p class="card-text">✍️ {{ reporte.descripcion }}</p>
+          <p class="card-text"><strong>📍 Ubicación:</strong> {{ reporte.ubicacion }}</p>
+          <p class="card-text text-muted"><small>📅 Fecha: {{ reporte.timestamp?.toDate() | date:'medium' }}</small></p>
+
+          <!-- Mostrar imágenes Base64 -->
+          <div class="row">
+            <div class="col-6 mb-2" *ngFor="let img of reporte.mediaBase64">
+              <img [src]="img" class="img-fluid rounded shadow" alt="Imagen del incidente">
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-  
+</div>
