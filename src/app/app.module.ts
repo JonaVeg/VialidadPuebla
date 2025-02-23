@@ -14,6 +14,10 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import { ReportarIncidenteComponent } from './components/reportar-incidente/reportar-incidente.component';
 import { HomeComponent } from './components/home/home.component';
 import { VerReportesComponent } from './components/ver-reportes/ver-reportes.component';
+import { ForoComponent } from './components/foro/foro.component';
+import { TemaComponent } from './components/tema/tema.component';
+
+
 
 @NgModule({
   declarations: [
@@ -22,7 +26,9 @@ import { VerReportesComponent } from './components/ver-reportes/ver-reportes.com
     NavbarComponent,
     ReportarIncidenteComponent,
     HomeComponent,
-    VerReportesComponent
+    VerReportesComponent,
+    ForoComponent,
+    TemaComponent
   ],
   imports: [
     BrowserModule,

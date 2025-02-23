@@ -1,0 +1,25 @@
+<div class="container mt-4">
+    <h2 class="text-center">📌 {{ tema.titulo }}</h2>
+    <p class="text-muted">📅 {{ tema.fecha?.toDate() | date:'short' }} - 📌 {{ tema.categoria }} - ✍️ {{ tema.autor }}</p>
+    
+    <hr>
+
+    <!-- 📌 Sección de Comentarios -->
+    <h4>💬 Comentarios</h4>
+
+    <!-- 📌 Agregar un nuevo comentario -->
+    <div class="mb-3">
+        <textarea [(ngModel)]="nuevoComentario.mensaje" class="form-control" placeholder="Escribe tu comentario..."></textarea>
+        <button class="btn btn-primary mt-2" (click)="agregarComentario()">Enviar</button>
+    </div>
+
+    <!-- 📌 Listado de Comentarios -->
+    <div class="list-group">
+        <div class="list-group-item" *ngFor="let comentario of comentarios">
+            <p><strong>✍️ {{ comentario.autor }}</strong> - 📅 {{ comentario.fecha?.toDate() | date:'short' }}</p>
+            <p>{{ comentario.mensaje }}</p>
+            <button class="btn btn-sm btn-success" (click)="reaccionarComentario(comentario.id, 'likes')">👍 {{ comentario.likes }}</button>
+            <button class="btn btn-sm btn-danger" (click)="reaccionarComentario(comentario.id, 'dislikes')">👎 {{ comentario.dislikes }}</button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,28 @@
+<div class="container mt-4">
+    <h2 class="text-center">📢 Foro de Discusión sobre Vialidad</h2>
+    <p class="text-center text-muted">Comparte ideas, problemas y soluciones con la comunidad.</p>
+
+    <!-- 📌 Formulario para Nuevo Tema -->
+    <div class="card p-3 mb-4 shadow">
+        <h4>📝 Crear Nuevo Tema</h4>
+        <div class="mb-3">
+            <input type="text" [(ngModel)]="nuevoTema.titulo" class="form-control" placeholder="Título del tema">
+        </div>
+        <div class="mb-3">
+            <select [(ngModel)]="nuevoTema.categoria" class="form-select">
+                <option value="" disabled selected>Selecciona una categoría</option>
+                <option *ngFor="let categoria of categorias" [value]="categoria">{{ categoria }}</option>
+            </select>
+        </div>
+        <button class="btn btn-primary" (click)="agregarTema()">🚀 Publicar Tema</button>
+    </div>
+
+    <!-- 📌 Lista de Temas -->
+    <div class="list-group">
+        <div class="list-group-item list-group-item-action" *ngFor="let tema of temas">
+            <h5>{{ tema.titulo }}</h5>
+            <p class="text-muted">📅 {{ tema.fecha.toDate() | date:'short' }} - 📌 {{ tema.categoria }} - ✍️ {{ tema.autor }}</p>
+            <a [routerLink]="['/tema', tema.id]" class="btn btn-outline-primary btn-sm">Ver Tema</a>
+        </div>
+    </div>
+</div>
