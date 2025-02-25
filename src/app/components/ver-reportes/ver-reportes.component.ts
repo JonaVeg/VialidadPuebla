@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { initializeApp } from 'firebase/app';
 import { getFirestore, collection, query, orderBy, onSnapshot } from 'firebase/firestore';
 
-// Configuración de Firebase (reemplaza con tus credenciales)
+// Configuración de Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyDQ2tMdy3RNL5F5GVlnvC-zcl-tZHknGFo",
   authDomain: "vialidadpuebla-59296.firebaseapp.com",
@@ -39,5 +39,15 @@ export class VerReportesComponent implements OnInit {
     }, (error) => {
       console.error("❌ Error al cargar los reportes:", error);
     });
+  }
+
+  // 📌 Detecta si la URL es una imagen
+  isImage(url: string): boolean {
+    return url.startsWith('data:image');
+  }
+
+  // 📌 Detecta si la URL es un video
+  isVideo(url: string): boolean {
+    return url.startsWith('data:video') || url.startsWith('blob:');
   }
 }

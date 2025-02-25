@@ -11,12 +11,14 @@
           <p class="card-text"><strong>📍 Ubicación:</strong> {{ reporte.ubicacion }}</p>
           <p class="card-text text-muted"><small>📅 Fecha: {{ reporte.timestamp?.toDate() | date:'medium' }}</small></p>
 
-          <!-- Mostrar imágenes Base64 -->
+          <!-- Mostrar imágenes y videos -->
           <div class="row">
-            <div class="col-6 mb-2" *ngFor="let img of reporte.mediaBase64">
-              <img [src]="img" class="img-fluid rounded shadow" alt="Imagen del incidente">
+            <div class="col-6 mb-2" *ngFor="let media of reporte.mediaBase64">
+              <img *ngIf="isImage(media)" [src]="media" class="img-fluid rounded shadow" alt="Imagen del incidente">
+              <video *ngIf="isVideo(media)" [src]="media" controls class="img-fluid rounded shadow"></video>
             </div>
           </div>
+          
         </div>
       </div>
     </div>
