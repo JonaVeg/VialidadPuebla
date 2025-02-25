@@ -10,9 +10,9 @@ import { ForoComponent } from './components/foro/foro.component';
 import { TemaComponent } from './components/tema/tema.component';
 
 const routes: Routes = [
-  { path: '', component: HomeComponent }, // Página principal
-  { path: 'reportar-incidente', component: ReportarIncidenteComponent }, // Página para reportar
-  { path: 'ver-reportes', component: VerReportesComponent }, // Nueva página para ver reportes
+  { path: '', component: HomeComponent }, 
+  { path: 'reportar-incidente', component: ReportarIncidenteComponent }, 
+  { path: 'ver-reportes', component: VerReportesComponent }, 
   { path: 'foro', component: ForoComponent },
   { path: 'tema/:id', component: TemaComponent }
   

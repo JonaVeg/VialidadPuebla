@@ -1,10 +1,10 @@
 <div class="container mt-4">
-    <h2 class="text-center">📢 Foro de Discusión sobre Vialidad</h2>
+    <h2 class="text-center text-primary fw-bold">📢 Foro de Discusión sobre Vialidad</h2>
     <p class="text-center text-muted">Comparte ideas, problemas y soluciones con la comunidad.</p>
 
     <!-- 📌 Formulario para Nuevo Tema -->
-    <div class="card p-3 mb-4 shadow">
-        <h4>📝 Crear Nuevo Tema</h4>
+    <div class="card p-4 mb-4 shadow-lg">
+        <h4 class="fw-bold">📝 Crear Nuevo Tema</h4>
         <div class="mb-3">
             <input type="text" [(ngModel)]="nuevoTema.titulo" class="form-control" placeholder="Título del tema">
         </div>
@@ -14,15 +14,22 @@
                 <option *ngFor="let categoria of categorias" [value]="categoria">{{ categoria }}</option>
             </select>
         </div>
-        <button class="btn btn-primary" (click)="agregarTema()">🚀 Publicar Tema</button>
+        <button class="btn btn-primary w-100" (click)="agregarTema()">🚀 Publicar Tema</button>
     </div>
 
     <!-- 📌 Lista de Temas -->
-    <div class="list-group">
-        <div class="list-group-item list-group-item-action" *ngFor="let tema of temas">
-            <h5>{{ tema.titulo }}</h5>
-            <p class="text-muted">📅 {{ tema.fecha.toDate() | date:'short' }} - 📌 {{ tema.categoria }} - ✍️ {{ tema.autor }}</p>
-            <a [routerLink]="['/tema', tema.id]" class="btn btn-outline-primary btn-sm">Ver Tema</a>
+    <h4 class="fw-bold mb-3">📌 Temas Recientes</h4>
+    <div class="row">
+        <div class="col-md-6 mb-3" *ngFor="let tema of temas">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold text-dark">{{ tema.titulo }}</h5>
+                    <p class="text-muted">
+                        📅 {{ tema.fecha.toDate() | date:'short' }} - 📌 {{ tema.categoria }} - ✍️ {{ tema.autor }}
+                    </p>
+                    <a [routerLink]="['/tema', tema.id]" class="btn btn-outline-primary btn-sm">👀 Ver Tema</a>
+                </div>
+            </div>
         </div>
     </div>
 </div>

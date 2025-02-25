@@ -7,17 +7,33 @@
             
             <!-- 📌 Tipo de Incidente -->
             <div class="mb-3">
-                <label for="tipoIncidente" class="form-label fw-bold">🚦 Tipo de Incidente</label>
-                <select id="tipoIncidente" [(ngModel)]="tipoIncidente" name="tipoIncidente" required class="form-select">
+                <label class="form-label fw-bold">🚦 Tipo de Incidente</label>
+                <select [(ngModel)]="tipoIncidente" name="tipoIncidente" required class="form-select">
                     <option value="" disabled selected>Seleccione un tipo</option>
                     <option *ngFor="let tipo of tiposIncidentes" [value]="tipo">{{ tipo }}</option>
                 </select>
             </div>
 
+            <!-- 📌 Capturar Foto o Video -->
+            <div class="mb-3">
+                <label class="form-label fw-bold">📸 Capturar desde la cámara</label>
+                <div class="d-flex gap-2">
+                    <button type="button" class="btn btn-secondary" (click)="activarCamara()">📷 Activar Cámara</button>
+                    <button type="button" class="btn btn-success" (click)="capturarFoto()" [disabled]="!camaraActiva">📸 Tomar Foto</button>
+                    <button type="button" class="btn btn-danger" (click)="grabarVideo()" [disabled]="!camaraActiva || grabando">🎥 Grabar Video</button>
+                    <button type="button" class="btn btn-warning" (click)="detenerGrabacion()" [disabled]="!grabando">⏹️ Detener</button>
+                </div>
+            </div>
+
+            <!-- 📌 Previsualización de la Cámara -->
+            <div class="mb-3 text-center" *ngIf="camaraActiva">
+                <video #videoElement width="320" height="240" autoplay class="border shadow"></video>
+            </div>
+
             <!-- 📌 Subir Archivos -->
             <div class="mb-3">
-                <label for="fileInput" class="form-label fw-bold">📸 Selecciona una imagen o video</label>
-                <input type="file" id="fileInput" (change)="onFileSelected($event)" multiple accept="image/*,video/*" class="form-control">
+                <label class="form-label fw-bold">📎 Selecciona una imagen o video</label>
+                <input type="file" (change)="onFileSelected($event)" multiple accept="image/*,video/*" class="form-control">
             </div>
 
             <!-- 📌 Previsualización de Archivos -->
@@ -30,14 +46,14 @@
 
             <!-- 📌 Descripción -->
             <div class="mb-3">
-                <label for="descripcion" class="form-label fw-bold">✍️ Descripción del incidente</label>
-                <textarea id="descripcion" [(ngModel)]="descripcion" name="descripcion" required class="form-control" rows="3"></textarea>
+                <label class="form-label fw-bold">✍️ Descripción del incidente</label>
+                <textarea [(ngModel)]="descripcion" name="descripcion" required class="form-control" rows="3"></textarea>
             </div>
 
             <!-- 📌 Ubicación -->
             <div class="mb-3">
-                <label for="ubicacion" class="form-label fw-bold">📍 Ubicación del incidente</label>
-                <input type="text" id="ubicacion" [(ngModel)]="ubicacion" name="ubicacion" placeholder="Ejemplo: Calle 5 de Mayo #10, Puebla" required class="form-control">
+                <label class="form-label fw-bold">📍 Ubicación del incidente</label>
+                <input type="text" [(ngModel)]="ubicacion" name="ubicacion" placeholder="Ejemplo: Calle 5 de Mayo #10, Puebla" required class="form-control">
             </div>
 
             <!-- 📌 Botón de Enviar -->

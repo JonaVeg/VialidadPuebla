@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import { initializeApp } from 'firebase/app';
 import { getFirestore, collection, addDoc, serverTimestamp } from 'firebase/firestore';
 
-// Configuración de Firebase (reemplaza con tus credenciales)
+// Configuración de Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyDQ2tMdy3RNL5F5GVlnvC-zcl-tZHknGFo",
   authDomain: "vialidadpuebla-59296.firebaseapp.com",
@@ -21,6 +21,8 @@ const db = getFirestore(app);
   styleUrls: ['./reportar-incidente.component.css']
 })
 export class ReportarIncidenteComponent {
+  @ViewChild('videoElement', { static: false }) videoElement!: ElementRef;
+  
   tipoIncidente: string = '';
   descripcion: string = '';
   ubicacion: string = '';
@@ -30,52 +32,63 @@ export class ReportarIncidenteComponent {
   previewUrls: string[] = [];
   isUploading: boolean = false;
 
-  subirReporte() {
-    console.log("🚀 Iniciando subida de reporte...");
-    
-    if (!this.tipoIncidente || !this.descripcion || !this.ubicacion) {
-      console.error("❌ Error: Faltan datos en el formulario");
-      return;
-    }
+  camaraActiva = false;
+  grabando = false;
+  mediaRecorder: any;
+  recordedChunks: any[] = [];
 
-    this.isUploading = true;
-
-    const files = this.selectedFiles ? Array.from(this.selectedFiles) : [];
-    console.log("📁 Archivos seleccionados:", files);
-
-    const base64Promises = files.map(file => this.fileToBase64(file));
-
-    Promise.all(base64Promises)
-      .then(base64Urls => {
-        console.log("📤 Imágenes convertidas a Base64:", base64Urls);
-        
-        const reportData = {
-          tipoIncidente: this.tipoIncidente,
-          descripcion: this.descripcion,
-          ubicacion: this.ubicacion,
-          mediaBase64: base64Urls, // Almacenamos las imágenes en Base64 en Firestore
-          timestamp: serverTimestamp()
-        };
-
-        console.log("📄 Guardando datos en Firestore:", reportData);
-
-        return addDoc(collection(db, 'reportes'), reportData);
+  // 📌 Activa la cámara
+  activarCamara() {
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(stream => {
+        this.videoElement.nativeElement.srcObject = stream;
+        this.camaraActiva = true;
       })
-      .then(() => {
-        console.log("✅ Reporte guardado exitosamente en Firestore");
-        this.tipoIncidente = '';
-        this.descripcion = '';
-        this.ubicacion = '';
-        this.previewUrls = [];
-        this.selectedFiles = null;
-        this.isUploading = false;
-      })
-      .catch(error => {
-        console.error("❌ Error al subir el reporte:", error);
-        this.isUploading = false;
-      });
+      .catch(error => console.error("❌ Error al acceder a la cámara:", error));
   }
 
+  // 📌 Captura una imagen desde la cámara
+  capturarFoto() {
+    const canvas = document.createElement('canvas');
+    canvas.width = this.videoElement.nativeElement.videoWidth;
+    canvas.height = this.videoElement.nativeElement.videoHeight;
+    const ctx = canvas.getContext('2d');
+    ctx?.drawImage(this.videoElement.nativeElement, 0, 0, canvas.width, canvas.height);
+
+    const fotoBase64 = canvas.toDataURL('image/png');
+    this.previewUrls.push(fotoBase64);
+  }
+
+  // 📌 Inicia la grabación de video
+  grabarVideo() {
+    this.recordedChunks = [];
+    this.grabando = true;
+
+    const stream = this.videoElement.nativeElement.srcObject;
+    this.mediaRecorder = new MediaRecorder(stream);
+    
+    this.mediaRecorder.ondataavailable = (event: any) => {
+      if (event.data.size > 0) {
+        this.recordedChunks.push(event.data);
+      }
+    };
+
+    this.mediaRecorder.onstop = () => {
+      const blob = new Blob(this.recordedChunks, { type: 'video/mp4' });
+      const videoUrl = URL.createObjectURL(blob);
+      this.previewUrls.push(videoUrl);
+    };
+
+    this.mediaRecorder.start();
+  }
+
+  // 📌 Detiene la grabación de video
+  detenerGrabacion() {
+    this.grabando = false;
+    this.mediaRecorder.stop();
+  }
+
+  // 📌 Maneja la selección de archivos
   onFileSelected(event: Event) {
     console.log("📂 Selección de archivos detectada...");
     const input = event.target as HTMLInputElement;
@@ -91,24 +104,47 @@ export class ReportarIncidenteComponent {
     }
   }
 
-  fileToBase64(file: File): Promise<string> {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        console.log(`📌 Archivo convertido a Base64: ${file.name}`);
-        const base64 = reader.result as string;
-        resolve(base64);
-      };
-      reader.onerror = error => reject(error);
-      reader.readAsDataURL(file);
-    });
+  // 📌 Envía el reporte a Firestore
+  async subirReporte() {
+    console.log("🚀 Iniciando subida de reporte...");
+
+    if (!this.tipoIncidente || !this.descripcion || !this.ubicacion) {
+      console.error("❌ Error: Faltan datos en el formulario");
+      return;
+    }
+
+    this.isUploading = true;
+
+    const reportData = {
+      tipoIncidente: this.tipoIncidente,
+      descripcion: this.descripcion,
+      ubicacion: this.ubicacion,
+      mediaBase64: this.previewUrls, // Guarda las imágenes o videos en Base64
+      timestamp: serverTimestamp()
+    };
+
+    try {
+      await addDoc(collection(db, 'reportes'), reportData);
+      console.log("✅ Reporte guardado exitosamente en Firestore");
+
+      // Restablecer el formulario
+      this.tipoIncidente = '';
+      this.descripcion = '';
+      this.ubicacion = '';
+      this.previewUrls = [];
+      this.selectedFiles = null;
+      this.isUploading = false;
+    } catch (error) {
+      console.error("❌ Error al subir el reporte:", error);
+      this.isUploading = false;
+    }
   }
 
   isImage(url: string): boolean {
-    return url.match(/\.(jpeg|jpg|gif|png)$/) !== null;
+    return url.startsWith('data:image');
   }
 
   isVideo(url: string): boolean {
-    return url.match(/\.(mp4|mov|avi|wmv)$/) !== null;
+    return url.startsWith('blob:');
   }
 }
