@@ -32,7 +32,10 @@ export class VerReportesComponent implements OnInit {
       this.reportes = [];
       querySnapshot.forEach((doc) => {
         const reporte = doc.data();
-        this.reportes.push(reporte);
+        this.reportes.push({
+          ...reporte,
+          mediaBase64: Array.isArray(reporte['mediaBase64']) ? reporte['mediaBase64'] : [] // ✅ Corrección aquí
+        });
       });
 
       console.log("✅ Reportes cargados:", this.reportes);

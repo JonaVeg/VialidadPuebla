@@ -22,14 +22,14 @@ const db = getFirestore(app);
 })
 export class ReportarIncidenteComponent {
   @ViewChild('videoElement', { static: false }) videoElement!: ElementRef;
-  
+
   tipoIncidente: string = '';
   descripcion: string = '';
   ubicacion: string = '';
   tiposIncidentes: string[] = ['Accidente', 'Infracción', 'Obstrucción'];
 
   selectedFiles: FileList | null = null;
-  previewUrls: string[] = [];
+  previewUrls: { type: 'image' | 'video', url: string }[] = [];
   isUploading: boolean = false;
 
   camaraActiva = false;
@@ -56,7 +56,7 @@ export class ReportarIncidenteComponent {
     ctx?.drawImage(this.videoElement.nativeElement, 0, 0, canvas.width, canvas.height);
 
     const fotoBase64 = canvas.toDataURL('image/png');
-    this.previewUrls.push(fotoBase64);
+    this.previewUrls.push({ type: 'image', url: fotoBase64 });
   }
 
   // 📌 Inicia la grabación de video
@@ -66,7 +66,7 @@ export class ReportarIncidenteComponent {
 
     const stream = this.videoElement.nativeElement.srcObject;
     this.mediaRecorder = new MediaRecorder(stream);
-    
+
     this.mediaRecorder.ondataavailable = (event: any) => {
       if (event.data.size > 0) {
         this.recordedChunks.push(event.data);
@@ -76,7 +76,7 @@ export class ReportarIncidenteComponent {
     this.mediaRecorder.onstop = () => {
       const blob = new Blob(this.recordedChunks, { type: 'video/mp4' });
       const videoUrl = URL.createObjectURL(blob);
-      this.previewUrls.push(videoUrl);
+      this.previewUrls.push({ type: 'video', url: videoUrl });
     };
 
     this.mediaRecorder.start();
@@ -88,7 +88,7 @@ export class ReportarIncidenteComponent {
     this.mediaRecorder.stop();
   }
 
-  // 📌 Maneja la selección de archivos
+  // 📌 Maneja la selección de archivos y los clasifica
   onFileSelected(event: Event) {
     console.log("📂 Selección de archivos detectada...");
     const input = event.target as HTMLInputElement;
@@ -97,11 +97,30 @@ export class ReportarIncidenteComponent {
       this.previewUrls = [];
 
       Array.from(input.files).forEach(file => {
-        console.log(`🖼️ Archivo seleccionado: ${file.name}`);
-        const url = URL.createObjectURL(file);
-        this.previewUrls.push(url);
+        const fileType = file.type.split('/')[0]; // 'image' o 'video'
+
+        if (fileType === 'image') {
+          this.fileToBase64(file).then(base64 => {
+            this.previewUrls.push({ type: 'image', url: base64 });
+          });
+        } else if (fileType === 'video') {
+          const videoUrl = URL.createObjectURL(file);
+          this.previewUrls.push({ type: 'video', url: videoUrl });
+        }
       });
     }
+  }
+
+  // 📌 Convierte una imagen a Base64
+  fileToBase64(file: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        resolve(reader.result as string);
+      };
+      reader.onerror = error => reject(error);
+      reader.readAsDataURL(file);
+    });
   }
 
   // 📌 Envía el reporte a Firestore
@@ -115,11 +134,16 @@ export class ReportarIncidenteComponent {
 
     this.isUploading = true;
 
+    // 📌 Separa imágenes y videos para subir correctamente
+    const imagenesBase64 = this.previewUrls.filter(p => p.type === 'image').map(p => p.url);
+    const videosBlobs = this.previewUrls.filter(p => p.type === 'video').map(p => p.url);
+
     const reportData = {
       tipoIncidente: this.tipoIncidente,
       descripcion: this.descripcion,
       ubicacion: this.ubicacion,
-      mediaBase64: this.previewUrls, // Guarda las imágenes o videos en Base64
+      imagenes: imagenesBase64,
+      videos: videosBlobs, // Guardamos la URL del video
       timestamp: serverTimestamp()
     };
 
@@ -139,24 +163,4 @@ export class ReportarIncidenteComponent {
       this.isUploading = false;
     }
   }
-
-  isImage(url: string): boolean {
-    return url.startsWith('data:image');
-  }
-
-  isVideo(url: string): boolean {
-    return url.startsWith('blob:');
-  }
-  fileToBase64(file: File): Promise<string> {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        const base64 = reader.result as string;
-        resolve(base64);
-      };
-      reader.onerror = error => reject(error);
-      reader.readAsDataURL(file);  // ⚠️ Asegura que se lea correctamente como Base64
-    });
-  }
-  
 }

@@ -39,8 +39,8 @@
             <!-- 📌 Previsualización de Archivos -->
             <div class="mb-3 row" *ngIf="previewUrls.length > 0">
                 <div class="col-md-4 mb-2" *ngFor="let preview of previewUrls">
-                    <img *ngIf="isImage(preview)" [src]="preview" class="img-fluid rounded shadow">
-                    <video *ngIf="isVideo(preview)" [src]="preview" controls class="img-fluid rounded shadow"></video>
+                    <img *ngIf="preview.type === 'image'" [src]="preview.url" class="img-fluid rounded shadow" alt="Imagen seleccionada">
+                    <video *ngIf="preview.type === 'video'" [src]="preview.url" controls class="img-fluid rounded shadow"></video>
                 </div>
             </div>
 
