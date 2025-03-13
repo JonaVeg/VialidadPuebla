@@ -17,6 +17,7 @@ import { VerReportesComponent } from './components/ver-reportes/ver-reportes.com
 import { ForoComponent } from './components/foro/foro.component';
 import { TemaComponent } from './components/tema/tema.component';
 import { NotificacionReporteComponent } from './components/notificacion-reporte/notificacion-reporte.component';
+import { MapaComponent } from './components/mapa/mapa.component';
 
 
 
@@ -30,7 +31,8 @@ import { NotificacionReporteComponent } from './components/notificacion-reporte/
     VerReportesComponent,
     ForoComponent,
     TemaComponent,
-    NotificacionReporteComponent
+    NotificacionReporteComponent,
+    MapaComponent
   ],
   imports: [
     BrowserModule,
