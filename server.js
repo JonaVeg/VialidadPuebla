@@ -9,7 +9,6 @@ app.get('/*', function(req, res) {
   res.sendFile(path.join(__dirname + '/dist/vialidad-puebla1/index.html'));
 });
 
-// Inicia el servidor en el puerto especificado por Railway o en el puerto 8080 por defecto
 const port = process.env.PORT || 8080;
 app.listen(port, () => {
   console.log(`Servidor iniciado en el puerto ${port}`);

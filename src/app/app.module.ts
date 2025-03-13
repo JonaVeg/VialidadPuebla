@@ -16,6 +16,7 @@ import { HomeComponent } from './components/home/home.component';
 import { VerReportesComponent } from './components/ver-reportes/ver-reportes.component';
 import { ForoComponent } from './components/foro/foro.component';
 import { TemaComponent } from './components/tema/tema.component';
+import { NotificacionReporteComponent } from './components/notificacion-reporte/notificacion-reporte.component';
 
 
 
@@ -28,7 +29,8 @@ import { TemaComponent } from './components/tema/tema.component';
     HomeComponent,
     VerReportesComponent,
     ForoComponent,
-    TemaComponent
+    TemaComponent,
+    NotificacionReporteComponent
   ],
   imports: [
     BrowserModule,
