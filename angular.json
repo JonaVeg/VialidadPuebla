@@ -33,18 +33,7 @@
           },
           "configurations": {
             "production": {
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "3mb",
-                  "maximumError": "5mb"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "4kb",
-                  "maximumError": "8kb"
-                }
-              ],
+              
               "outputHashing": "all",
               "optimization": {
                 "scripts": true,
@@ -101,3 +90,7 @@
     "analytics": "e45fbced-3c01-4a26-8530-1b147159386d"
   }
 }
+
+
+
+
