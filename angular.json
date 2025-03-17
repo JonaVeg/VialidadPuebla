@@ -42,6 +42,7 @@
               },
               "sourceMap": false,
               "namedChunks": false,
+              "vendorChunk": false,
               "buildOptimizer": true
             }
           },
