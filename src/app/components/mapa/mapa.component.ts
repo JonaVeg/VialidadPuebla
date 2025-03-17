@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import * as mapboxgl from 'mapbox-gl';
+//import * as mapboxgl from 'mapbox-gl';
+import mapboxgl from 'mapbox-gl';
 import { initializeApp, getApps, getApp } from 'firebase/app';
 import { getFirestore, collection, getDocs } from 'firebase/firestore';
 import { environment } from 'src/environments/environment'; // Importa el environment
@@ -18,7 +19,7 @@ export class MapaComponent implements OnInit {
   reportes: any[] = [];
 
   ngOnInit() {
-    (mapboxgl as any).accessToken = 'pk.eyJ1Ijoiam9uYTIwMjUiLCJhIjoiY204NnJ3cDJwMDdmaTJqcHVzMXBzdW9jMyJ9.VDokIJCjfHe_9z33Ez9FEw'; // Reemplaza con tu API Key de Mapbox
+    mapboxgl.accessToken = 'pk.eyJ1Ijoiam9uYTIwMjUiLCJhIjoiY204NnJ3cDJwMDdmaTJqcHVzMXBzdW9jMyJ9.VDokIJCjfHe_9z33Ez9FEw'; // Reemplaza con tu API Key de Mapbox
 
     this.mapa = new mapboxgl.Map({
       container: 'mapa', // ID del div donde se mostrará el mapa
