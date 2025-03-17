@@ -2,12 +2,18 @@ const express = require('express');
 const path = require('path');
 const app = express();
 
-// Ruta correcta para servir archivos estáticos
-app.use(express.static(path.join(__dirname, 'dist', 'vialidad-puebla1')));
+// Verifica si la carpeta de distribución existe antes de servir archivos estáticos
+const distFolder = path.join(__dirname, 'dist', 'vialidad-puebla1');
 
-// Redirige todas las solicitudes al archivo index.html
-app.get('/*', function(req, res) {
-  res.sendFile(path.join(__dirname, 'dist', 'vialidad-puebla1', 'index.html'));
+app.use(express.static(distFolder));
+
+app.get('/*', (req, res) => {
+  res.sendFile(path.join(distFolder, 'index.html'), (err) => {
+    if (err) {
+      console.error("Error enviando index.html:", err);
+      res.status(500).send("Error interno del servidor");
+    }
+  });
 });
 
 // Puerto dinámico para Railway
